@@ -6,13 +6,12 @@ write-host "Getting Information: Please wait"
 # System Information
 systeminfo |Out-File $env:COMPUTERNAME-SystemInfo.txt -Append
 write-host "System Info: Done"
-echo "|----------Requirement ?----------|" >> $env:COMPUTERNAME-Requirement-1.txt
-# AD Specific Command
+echo "|----------Requirement 1----------|" >> $env:COMPUTERNAME-Requirement-1.txt
 $adserver1=(Get-ADComputer -Filter {OperatingSystem -Like "*server*"}).DNSHostName  -join ", "
-Add-Content -Path $env:COMPUTERNAME-Requirement-1.txt -value "Servers Listed in the domain= $adserver1 "
-#Universal Command
 $admachines=([adsisearcher]“objectcategory=computer”).findall()
-add-content -path $env:COMPUTERNAME-Requirement-1.txt -value "Computers connected to the Domain`r`n$admachines"
+if ($adserver1) {Add-Content -Path $env:COMPUTERNAME-Requirement-1.txt -value "Servers Listed in the domain= $adserver1 "}
+    elseif ($admachines) {echo "List of Servers Connected to the Domain:" >> $env:COMPUTERNAME-Requirement-1.txt; $admachines |out-file $env:COMPUTERNAME-Requirement-1.txt -append}
+    else {echo "Cannot get Server list from Domain." >> $env:COMPUTERNAME-Requirement-1.txt}
 
 Echo "|-----Requirement 1.4-----| " >> $env:COMPUTERNAME-Requirement-1.txt
 Echo "-Active Directory Status=" >> $env:COMPUTERNAME-Requirement-1.txt
