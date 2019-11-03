@@ -2,17 +2,20 @@
 # Author: Matthew Hanson
 # Script will drop information into separate txt Files respective
 # of their PCI Requirement section
+$ErrorActionPreference= 'silentlycontinue'
 write-host "Getting Information: Please wait" 
 # System Information
 systeminfo |Out-File $env:COMPUTERNAME-SystemInfo.txt -Append
 write-host "System Info: Done"
 echo "|----------Requirement 1----------|" >> $env:COMPUTERNAME-Requirement-1.txt
-$adserver1=(Get-ADComputer -Filter {OperatingSystem -Like "*server*"}).DNSHostName  -join ", "
-$admachines=([adsisearcher]“objectcategory=computer”).findall()
+try {
+$adserver1= (Get-ADComputer -Filter {OperatingSystem -Like "*server*"}).DNSHostName  -join ", "
+}
+catch {}
+$admachines= ([adsisearcher]“objectcategory=computer”).findall()
 if ($adserver1) {Add-Content -Path $env:COMPUTERNAME-Requirement-1.txt -value "Servers Listed in the domain= $adserver1 "}
     elseif ($admachines) {echo "List of Servers Connected to the Domain:" >> $env:COMPUTERNAME-Requirement-1.txt; $admachines |out-file $env:COMPUTERNAME-Requirement-1.txt -append}
     else {echo "Cannot get Server list from Domain." >> $env:COMPUTERNAME-Requirement-1.txt}
-
 Echo "|-----Requirement 1.4-----| " >> $env:COMPUTERNAME-Requirement-1.txt
 Echo "-Active Directory Status=" >> $env:COMPUTERNAME-Requirement-1.txt
 (Get-WmiObject -class win32_computersystem).Domain |Out-File $env:COMPUTERNAME-Requirement-1.txt -append
@@ -693,15 +696,27 @@ Echo "|----------Requirement 7.1----------|" >> $env:COMPUTERNAME-Requirement-7.
 $domain0=(Get-WmiObject -class win32_computersystem).Domain
 #High-priviledged Administrators, Domain Admins, Enterprise Admins, Schema Admins ( Groups )
 Echo "High Privileged Users"  >> $env:COMPUTERNAME-Requirement-7.txt
-$domainadmin=(Get-ADGroupMember -Identity 'Domain admins' -ea SilentlyContinue).name -join ", "
-$entadmin=(Get-ADGroupMember -Identity 'Enterprise Admins'-ea SilentlyContinue).name -join ", "
-$Scheadmin=(Get-ADGroupMember -Identity 'Schema Admins'-ea SilentlyContinue).name -join ", "
+try{
+$domainadmin=(Get-ADGroupMember -Identity 'Domain admins' -EA SilentlyContinue).name -join ", "
+}
+catch {}
+try{
+$entadmin=(Get-ADGroupMember -Identity 'Enterprise Admins'-EA SilentlyContinue).name -join ", "
+}
+catch {}
+try{
+$Scheadmin=(Get-ADGroupMember -Identity 'Schema Admins'-EA SilentlyContinue).name -join ", "
+}
+catch {}
 add-content -path $env:COMPUTERNAME-Requirement-7.txt -value "Domain Admins = $domainadmin"
 add-content -path $env:COMPUTERNAME-Requirement-7.txt -value "Enterprise Admins = $entadmin"
 add-content -path $env:COMPUTERNAME-Requirement-7.txt -value "Schema Admins = $Scheadmin"
 #non-privileged domain user
 Echo "Normal Privileged Users"  >> $env:COMPUTERNAME-Requirement-7.txt
-$DomUsers=(Get-ADGroupMember -Identity 'Domain Users' -ea SilentlyContinue).name  -join ", "
+try{
+$DomUsers=(Get-ADGroupMember -Identity 'Domain Users' -EA SilentlyContinue).name  -join ", "
+}
+catch {}
 add-content -path $env:COMPUTERNAME-Requirement-7.txt -value "Domain Users = $Domusers"
 echo "" >> $env:COMPUTERNAME-Requirement-7.txt
 echo "---Domain Members universal command---" >> $env:COMPUTERNAME-Requirement-7.txt
