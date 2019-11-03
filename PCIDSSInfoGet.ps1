@@ -32,7 +32,7 @@ Get-NetFirewallSetting -All | Out-File $env:COMPUTERNAME-Requirement-1.txt -Appe
 echo "-Inbound Firewall Rules=" >> $env:COMPUTERNAME-Requirement-1.txt
 Get-NetFirewallRule -All |Where-Object{$_.Direction -eq "Inbound"} |Out-File $env:COMPUTERNAME-Requirement-1.txt -Append
 echo "-Outbound Firewall Rules=" >> $env:COMPUTERNAME-Requirement-1.txt
-Get-NetFirewallRule -All |Where-Object{$_.Direction -eq "Inbound"} |Out-File $env:COMPUTERNAME-Requirement-1.txt -Append
+Get-NetFirewallRule -All |Where-Object{$_.Direction -eq "Outbound"} |Out-File $env:COMPUTERNAME-Requirement-1.txt -Append
 write-host "Requirement 1: Done"
 
 "|-----Requirement 2.1-----|" >> $env:COMPUTERNAME-Requirement-2.txt
