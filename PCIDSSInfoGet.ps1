@@ -1025,7 +1025,7 @@ if (!$screensavesecure) {Echo "screensavesecure is not set" >> $env:COMPUTERNAME
 } else {add-content -path $env:COMPUTERNAME-Requirement-8.txt -value $screensavesecure}
 Echo "" >> $env:COMPUTERNAME-Requirement-8.txt
 Echo "|----------Requirement 8.2----------|" >> $env:COMPUTERNAME-Requirement-8.txt
-secedit /export /mergedpolicy /cfg temp3.tmp
+secedit /export /mergedpolicy /cfg temp3.tmp /quiet
 # Password Store Configuration
 $ClearTextPassword= Get-Content temp3.tmp |Select-String ClearTextPassword
 if (!$ClearTextPassword) {Echo "ClearTextPassword is not set" >> $env:COMPUTERNAME-Requirement-8.txt
