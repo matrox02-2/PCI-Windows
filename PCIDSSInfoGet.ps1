@@ -1025,28 +1025,29 @@ if (!$screensavesecure) {Echo "screensavesecure is not set" >> $env:COMPUTERNAME
 } else {add-content -path $env:COMPUTERNAME-Requirement-8.txt -value $screensavesecure}
 Echo "" >> $env:COMPUTERNAME-Requirement-8.txt
 Echo "|----------Requirement 8.2----------|" >> $env:COMPUTERNAME-Requirement-8.txt
+secedit /export /mergedpolicy /cfg temp3.tmp
 # Password Store Configuration
-$ClearTextPassword= Get-Content screen.tmp |Select-String ClearTextPassword
+$ClearTextPassword= Get-Content temp3.tmp |Select-String ClearTextPassword
 if (!$ClearTextPassword) {Echo "ClearTextPassword is not set" >> $env:COMPUTERNAME-Requirement-8.txt
 } else {add-content -path $env:COMPUTERNAME-Requirement-8.txt -value $ClearTextPassword}
 echo "" >> $env:COMPUTERNAME-Requirement-8.txt
 # Password Length
-$MinimumPasswordLength= Get-Content screen.tmp |Select-String MinimumPasswordLength
+$MinimumPasswordLength= Get-Content temp3.tmp |Select-String MinimumPasswordLength
 if (!$MinimumPasswordLength) {Echo "MinimumPasswordLength is not set" >> $env:COMPUTERNAME-Requirement-8.txt
 } else {add-content -path $env:COMPUTERNAME-Requirement-8.txt -value $MinimumPasswordLength}
 echo "" >> $env:COMPUTERNAME-Requirement-8.txt
 # Password Complexity
-$PasswordComplexity= Get-Content screen.tmp |Select-String PasswordComplexity
+$PasswordComplexity= Get-Content temp3.tmp |Select-String PasswordComplexity
 if (!$PasswordComplexity) {Echo "PasswordComplexity is not set" >> $env:COMPUTERNAME-Requirement-8.txt
 } else {add-content -path $env:COMPUTERNAME-Requirement-8.txt -value $PasswordComplexity}
 echo "" >> $env:COMPUTERNAME-Requirement-8.txt
 # Password Change Threshold
-$MaximumPasswordAge= Get-Content screen.tmp |Select-String MaximumPasswordAge
+$MaximumPasswordAge= Get-Content temp3.tmp |Select-String MaximumPasswordAge
 if (!$MaximumPasswordAge) {Echo "MaximumPasswordAge is not set" >> $env:COMPUTERNAME-Requirement-8.txt
 } else {add-content -path $env:COMPUTERNAME-Requirement-8.txt -value $MaximumPasswordAge}
 echo "" >> $env:COMPUTERNAME-Requirement-8.txt
 # Password History
-$PasswordHistorySize= Get-Content screen.tmp |Select-String PasswordHistorySize
+$PasswordHistorySize= Get-Content temp3.tmp |Select-String PasswordHistorySize
 if (!$PasswordHistorySize) {Echo "PasswordHistorySize is not set" >> $env:COMPUTERNAME-Requirement-8.txt
 } else {add-content -path $env:COMPUTERNAME-Requirement-8.txt -value $PasswordHistorySize}
 echo "" >> $env:COMPUTERNAME-Requirement-8.txt
@@ -1165,5 +1166,6 @@ del sec.tmp
 del OUTFILE.tmp
 del accounts.tmp
 del screen.tmp
+del temp3.tmp
 write-host "Requirement 10: Done"
 Write-Host "Finished"
