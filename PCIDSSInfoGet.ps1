@@ -745,7 +745,7 @@ Get-WmiObject -class win32_useraccount |select name,sid | Out-File $env:COMPUTER
 # Global Privilege Rights R7.1-7.2
 echo "--Global Priviledge Rights--" >> $env:COMPUTERNAME-Requirement-7.txt
 #SeBatchLogonRight
-secedit /export /areas USER_RIGHTS /cfg OUTFILE.tmp
+secedit /export /areas USER_RIGHTS /cfg OUTFILE.tmp /quiet
 $SeBatchLogonRight = Get-Content OUTFILE.tmp |Select-String SeBatchLogonRight
 if (!$SeBatchLogonRight) { echo "SeBatchLogonRight is not set" >> $env:COMPUTERNAME-Requirement-7.txt
 } else {add-content -path $env:COMPUTERNAME-Requirement-7.txt -value $SeBatchLogonRight }
